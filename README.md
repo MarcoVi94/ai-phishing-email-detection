@@ -29,3 +29,15 @@ The experimental workflow includes data preprocessing, TF-IDF text vectorization
 - Evaluate the performance of machine learning models in phishing email detection.
 - Investigate model generalization across different datasets.
 - Assess the effectiveness of classifiers in detecting AI-generated phishing emails.
+
+## Datasets
+
+The datasets used for training and evaluation are not included in this repository due to file size limitations. They can be downloaded from Kaggle:
+
+- **Phishing Email Dataset** – Naser Abdullah Alam  
+  https://www.kaggle.com/datasets/naserabdullahalam/phishing-email-dataset  
+  File used: `phishing_email.csv`
+
+- **AVN Phishing Email Classification Dataset** – AVN BlueFox  
+  https://www.kaggle.com/datasets/avnbluefox/avn-phishing-email-classification-dataset  
+  File used: `AVN_Corpus.csv`
