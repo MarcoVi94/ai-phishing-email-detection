@@ -1,0 +1,5 @@
+Esperimento,Accuracy,TN,FP,FN,TP
+MLP - Dataset 1 -> Dataset 2,93.29828434582498,22499,3420,162,27368
+MLP - Dataset 2 -> Dataset 1,89.9071614805429,36225,3008,5276,37569
+Logistic Regression - Dataset 1 -> Dataset 2,92.16449325525267,21948,3971,217,27313
+Logistic Regression - Dataset 2 -> Dataset 1,85.12512488121055,38355,878,11331,31514

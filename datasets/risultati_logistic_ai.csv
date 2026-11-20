@@ -1,0 +1,5 @@
+Esperimento,Email testate,Accuracy,Precision phishing,Recall phishing,F1-score phishing,TN,FP,FN,TP
+Logistic Dataset 1 -> AI Italiano,1000,0.5,0.5,0.992,0.6648793565683646,4,496,4,496
+Logistic Dataset 1 -> AI Inglese,1000,0.834,0.7899305555555556,0.91,0.845724907063197,379,121,45,455
+Logistic Dataset 2 -> AI Italiano,1000,0.558,0.5358024691358024,0.868,0.6625954198473283,124,376,66,434
+Logistic Dataset 2 -> AI Inglese,1000,0.73,0.7963917525773195,0.618,0.6959459459459459,421,79,191,309
