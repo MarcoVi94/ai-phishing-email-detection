@@ -15,7 +15,7 @@ from sklearn.metrics import (
 
 
 # =========================
-# ARCHITETTURA MLP
+# MLP ARCHITECTURE
 # =========================
 
 class PhishingClassifier(nn.Module):
@@ -33,7 +33,7 @@ class PhishingClassifier(nn.Module):
 
 
 # =========================
-# FUNZIONE DI TEST
+# TEST FUNCTION
 # =========================
 
 def test_model(model_file, vectorizer_file, dataset_file, dataset_name):
@@ -42,25 +42,25 @@ def test_model(model_file, vectorizer_file, dataset_file, dataset_name):
     print(f"TEST: {dataset_name}")
     print("=" * 70)
 
-    # Caricamento dataset
+    # Dataset loading
     df = pd.read_csv(dataset_file)
 
     x = df["text_combined"].fillna("")
     y = df["label"].astype(int).values
 
-    # Caricamento TF-IDF già addestrato
+    # Load the already trained TF-IDF vectorizer
     vectorizer = joblib.load(vectorizer_file)
 
-    # Trasformazione del testo
+    # Text transformation
     x_tfidf = vectorizer.transform(x)
 
-    # Conversione in tensore
+    # Tensor conversion
     x_tensor = torch.tensor(
         x_tfidf.toarray(),
         dtype=torch.float32
     )
 
-    # Caricamento modello già addestrato
+    # Load the already trained model
     model = PhishingClassifier(x_tensor.shape[1])
 
     model.load_state_dict(
@@ -73,14 +73,14 @@ def test_model(model_file, vectorizer_file, dataset_file, dataset_name):
 
     model.eval()
 
-    # Predizione
+    # Prediction
     with torch.no_grad():
         outputs = model(x_tensor)
         predictions = (torch.sigmoid(outputs) >= 0.5).int()
 
     predictions = predictions.numpy().flatten()
 
-    # Metriche complessive
+    # Overall metrics
     accuracy = accuracy_score(y, predictions)
     precision = precision_score(
         y, predictions, pos_label=1, zero_division=0
@@ -92,12 +92,12 @@ def test_model(model_file, vectorizer_file, dataset_file, dataset_name):
         y, predictions, pos_label=1, zero_division=0
     )
 
-    # Matrice di confusione: [[TN, FP], [FN, TP]]
+    # Confusion matrix: [[TN, FP], [FN, TP]]
     cm = confusion_matrix(y, predictions, labels=[0, 1])
     tn, fp, fn, tp = cm.ravel()
 
-    # Stampa metriche
-    print(f"Email testate: {len(df)}")
+    # Print metrics
+    print(f"Tested emails: {len(df)}")
     print(f"Accuracy:  {accuracy * 100:.2f}%")
     print(f"Precision: {precision * 100:.2f}%")
     print(f"Recall:    {recall * 100:.2f}%")
@@ -106,26 +106,26 @@ def test_model(model_file, vectorizer_file, dataset_file, dataset_name):
     print("\nConfusion Matrix:")
     print(cm)
 
-    print("\nDettaglio matrice di confusione:")
-    print(f"TN (legittime classificate come legittime): {tn}")
-    print(f"FP (legittime classificate come phishing): {fp}")
-    print(f"FN (phishing classificato come legittimo): {fn}")
-    print(f"TP (phishing classificato come phishing): {tp}")
+    print("\nConfusion Matrix Details:")
+    print(f"TN (legitimate emails classified as legitimate): {tn}")
+    print(f"FP (legitimate emails classified as phishing): {fp}")
+    print(f"FN (phishing emails classified as legitimate): {fn}")
+    print(f"TP (phishing emails classified as phishing): {tp}")
 
     print("\nClassification Report:")
     print(classification_report(
         y,
         predictions,
         labels=[0, 1],
-        target_names=["Legittima", "Phishing"],
+        target_names=["Legitimate", "Phishing"],
         digits=4,
         zero_division=0
     ))
 
-    # Risultati per il riepilogo finale
+    # Results for the final summary
     return {
-        "Esperimento": dataset_name,
-        "Email testate": len(df),
+        "Experiment": dataset_name,
+        "Tested emails": len(df),
         "Accuracy": accuracy,
         "Precision phishing": precision,
         "Recall phishing": recall,
@@ -138,7 +138,7 @@ def test_model(model_file, vectorizer_file, dataset_file, dataset_name):
 
 
 # =========================
-# ESECUZIONE DEI TEST
+# RUNNING THE TESTS
 # =========================
 
 results = []
@@ -149,14 +149,14 @@ results.append(test_model(
     "../models/phishing_model_mlp_dataset1.pth",
     "../vectorizers/tfidf_vectorizer_dataset1.pkl",
     "../datasets/ai_email.csv",
-    "MLP Dataset 1 -> AI Italiano"
+    "MLP Dataset 1 -> AI Italian"
 ))
 
 results.append(test_model(
     "../models/phishing_model_mlp_dataset1.pth",
     "../vectorizers/tfidf_vectorizer_dataset1.pkl",
     "../datasets/ai_email_en.csv",
-    "MLP Dataset 1 -> AI Inglese"
+    "MLP Dataset 1 -> AI English"
 ))
 
 
@@ -166,24 +166,24 @@ results.append(test_model(
     "../models/phishing_model_mlp_dataset2.pth",
     "../vectorizers/tfidf_vectorizer_dataset2.pkl",
     "../datasets/ai_email.csv",
-    "MLP Dataset 2 -> AI Italiano"
+    "MLP Dataset 2 -> AI Italian"
 ))
 
 results.append(test_model(
     "../models/phishing_model_mlp_dataset2.pth",
     "../vectorizers/tfidf_vectorizer_dataset2.pkl",
     "../datasets/ai_email_en.csv",
-    "MLP Dataset 2 -> AI Inglese"
+    "MLP Dataset 2 -> AI English"
 ))
 
 
 # =========================
-# RIEPILOGO FINALE
+# FINAL SUMMARY
 # =========================
 
 results_df = pd.DataFrame(results)
 
-# Conversione delle metriche in percentuale
+# Convert metrics to percentages
 metric_columns = [
     "Accuracy",
     "Precision phishing",
@@ -197,15 +197,15 @@ results_display[metric_columns] = (
 ).round(2)
 
 print("\n" + "=" * 70)
-print("RIEPILOGO DEI RISULTATI (%)")
+print("RESULTS SUMMARY (%)")
 print("=" * 70)
 print(results_display.to_string(index=False))
 
-# Salvataggio del riepilogo
+# Save the summary
 results_df.to_csv(
-    "../datasets/risultati_mlp_ai.csv",
+    "../datasets/results_mlp_ai.csv",
     index=False
 )
 
-print("\nRiepilogo salvato in:")
-print("../datasets/risultati_mlp_ai.csv")
+print("\nSummary saved to:")
+print("../datasets/results_mlp_ai.csv")
