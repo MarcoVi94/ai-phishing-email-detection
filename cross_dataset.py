@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 
 
 # ========================
-# Percorsi
+# File Paths
 # ========================
 
 DATASET1 = "datasets/phishing_email.csv"
@@ -23,7 +23,7 @@ LOGISTIC2 = "models/phishing_model_logistic_dataset2.pkl"
 
 
 # ========================
-# Modello MLP
+# MLP Model
 # ========================
 
 
@@ -58,7 +58,7 @@ def load_mlp(model_path):
 
 
 # ========================
-# Caricamento Dataset 1
+# Dataset 1 Loading
 # ========================
 
 def load_dataset1():
@@ -78,7 +78,7 @@ def load_dataset1():
 
 
 # ========================
-# Caricamento Dataset 2
+# Dataset 2 Loading
 # ========================
 
 def load_dataset2():
@@ -104,7 +104,7 @@ def load_dataset2():
 
 
 # ========================
-# Predizioni MLP
+# MLP Predictions
 # ========================
 
 def predict_mlp(model, x_vectorized):
@@ -130,7 +130,7 @@ def predict_mlp(model, x_vectorized):
 
 
 # ========================
-# Esecuzione esperimento
+# Experiment Execution
 # ========================
 
 def run_experiment(
@@ -142,11 +142,11 @@ def run_experiment(
     experiment_name
 ):
 
-    # Trasformazione usando il vettorizzatore
-    # appartenente al dataset di training
+    # Trasform data using the vectorizer
+    # associated with the training dataset
     x_vectorized = vectorizer.transform(x_test)
 
-    # Predizioni
+    # Predictions
     if model_name == "MLP":
 
         predictions = predict_mlp(
@@ -166,7 +166,7 @@ def run_experiment(
         predictions
     )
 
-    # Matrice di confusione
+    # Confusion Matrix
     cm = confusion_matrix(
         y_test,
         predictions
@@ -180,7 +180,7 @@ def run_experiment(
         f"Accuracy: {accuracy * 100:.2f}%"
     )
 
-    print("\nMatrice di confusione:")
+    print("\nConfusion Matrix:")
     print(cm)
 
     print("\nClassification report:")
@@ -190,7 +190,7 @@ def run_experiment(
             y_test,
             predictions,
             target_names=[
-                "Legittima",
+                "Legitimate",
                 "Phishing"
             ],
             digits=4
@@ -198,7 +198,7 @@ def run_experiment(
     )
 
     return {
-        "Esperimento": experiment_name,
+        "Experiment": experiment_name,
         "Accuracy": accuracy * 100,
         "TN": cm[0][0],
         "FP": cm[0][1],
@@ -218,28 +218,27 @@ def main():
     print("=" * 60)
 
     # --------------------
-    # Dataset
+    # Datasets
     # --------------------
 
-    print("\nCaricamento dataset...")
+    print("\nLoading datasets...")
 
     x1, y1 = load_dataset1()
     x2, y2 = load_dataset2()
 
     print(
-        f"Dataset 1: {len(x1)} email"
+        f"Dataset 1: {len(x1)} emails"
     )
 
     print(
-        f"Dataset 2: {len(x2)} email"
+        f"Dataset 2: {len(x2)} emails"
     )
 
     # --------------------
-    # Vettorizzatori
+    # Vectorizers
     # --------------------
 
-    print("\nCaricamento vettorizzatori...")
-
+    print("\nCaricamento vettorizzatoriLoading vectorizers
     vectorizer1 = joblib.load(
         VECTORIZER1
     )
@@ -248,14 +247,14 @@ def main():
         VECTORIZER2
     )
 
-    print("Vettorizzatori caricati.")
+    print("Vectorizers loaded.")
 
     # --------------------
-    # Logistic Regression
+    # Logistic regression
     # --------------------
 
     print(
-        "\nCaricamento modelli Logistic Regression..."
+        "\nLoading Logistic Regression models..."
     )
 
     logistic1 = joblib.load(
@@ -267,22 +266,22 @@ def main():
     )
 
     print(
-        "Modelli Logistic Regression caricati."
+        "Logistic Regression model loaded."
     )
 
     # --------------------
     # MLP
     # --------------------
 
-    print("\nCaricamento modelli MLP...")
+    print("\nLoading MLP models...")
 
     mlp1 = load_mlp(MLP1)
     mlp2 = load_mlp(MLP2)
 
-    print("Modelli MLP caricati.")
+    print("MLP models loaded.")
 
     # --------------------
-    # Risultati
+    # Results
     # --------------------
 
     results = []
@@ -348,7 +347,7 @@ def main():
     )
 
     # ===============================
-    # Riepilogo
+    # Summary
     # ===============================
 
     results_df = pd.DataFrame(
@@ -356,13 +355,13 @@ def main():
     )
 
     print("\n" + "=" * 60)
-    print("RIEPILOGO CROSS-DATASET")
+    print("CROSS-DATASET SUMMARY")
     print("=" * 60)
 
     print(
         results_df[
             [
-                "Esperimento",
+                "Experiment",
                 "Accuracy",
                 "TN",
                 "FP",
@@ -373,7 +372,7 @@ def main():
     )
 
     # -------------------------------
-    # Salvataggio risultati
+    # Save Results
     # -------------------------------
 
     output_file = "cross_dataset_results.csv"
@@ -384,12 +383,12 @@ def main():
     )
 
     print(
-        f"\nRisultati salvati in: {output_file}"
+        f"\nResults saved to: {output_file}"
     )
 
 
 # ===================================
-# Avvio
+# Execution
 # ===================================
 
 if __name__ == "__main__":
