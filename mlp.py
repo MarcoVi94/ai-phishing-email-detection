@@ -5,7 +5,7 @@ from torch.utils.data import TensorDataset, DataLoader
 
 
 # =========================
-# MODELLO MLP
+# MLP MODEL
 # =========================
 
 class PhishingClassifier(nn.Module):
@@ -24,7 +24,7 @@ class PhishingClassifier(nn.Module):
 
 
 # =========================
-# TRAINING E PREDIZIONE
+# TRAINING AND PREDICTION
 # =========================
 
 def run_mlp(
@@ -34,7 +34,7 @@ def run_mlp(
 ):
 
 # =========================
-# CONVERSIONE IN TENSORI
+# TENSOR CONVERSION
 # =========================
 
     x_train_tensor = torch.tensor(
@@ -54,7 +54,7 @@ def run_mlp(
 
 
 # =========================
-# DATASET E DATALOADER
+# DATASET AND DATALOADER
 # =========================
 
     train_dataset = TensorDataset(
@@ -70,7 +70,7 @@ def run_mlp(
 
 
 # =========================
-# COSTRUZIONE DELLA RETE
+# NETWORK CONSTRUCTION
 # =========================
 
     input_size = x_train_tensor.shape[1]
@@ -79,12 +79,12 @@ def run_mlp(
         input_size
     )
 
-    print("\nModello:")
+    print("\nModel:")
     print(model)
 
 
 # =========================
-# LOSS E OPTIMIZER
+# LOSS FUNCTION AND OPTIMIZER
 # =========================
 
     loss_function = nn.BCEWithLogitsLoss()
@@ -107,28 +107,28 @@ def run_mlp(
 
         for x_batch, y_batch in train_loader:
 
-            # Previsione
+            # Prediction
             prediction = model(x_batch)
 
-            # Calcolo della loss
+            # Calculate the loss
             loss = loss_function(
                 prediction.squeeze(),
                 y_batch
             )
 
-            # Azzero i gradienti
+            # Reset gradients
             optimizer.zero_grad()
 
             # Backpropagation
             loss.backward()
 
-            # Aggiorno i pesi
+            # Update weights
             optimizer.step()
 
             total_loss += loss.item()
 
 
-        # Loss media dell'epoca
+        # Average loss per epoch
         average_loss = (
             total_loss / len(train_loader)
         )
@@ -158,5 +158,5 @@ def run_mlp(
         ).float()
 
 
-    # Restituisco il modello e le predizioni
+    # Return the model and predictions
     return model, test_predictions.numpy()
