@@ -2,7 +2,7 @@ from sklearn.linear_model import LogisticRegression
 
 
 # =========================
-# TRAINING E PREDIZIONE
+# TRAINING AND PREDICTION
 # =========================
 
 def run_logistic_regression(
@@ -12,7 +12,7 @@ def run_logistic_regression(
 ):
 
 # =========================
-# CREAZIONE DEL MODELLO
+# MODEL CREATION
 # =========================
 
     model = LogisticRegression(
@@ -31,7 +31,7 @@ def run_logistic_regression(
 
 
 # =========================
-# PREDIZIONE
+# PREDICTION
 # =========================
 
     predictions = model.predict(
@@ -39,5 +39,5 @@ def run_logistic_regression(
     )
 
 
-    # Restituisco il modello e le predizioni
+    # Return the model and predictions
     return model, predictions
