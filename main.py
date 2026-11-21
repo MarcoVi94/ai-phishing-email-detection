@@ -11,7 +11,7 @@ from logistic_regression import run_logistic_regression
 
 
 # =========================
-# CARICAMENTO DATASET
+# DATASET LOADING
 # =========================
 
 DATASET = 2
@@ -34,58 +34,58 @@ df = pd.read_csv(dataset_path)
 if DATASET == 1:
 
     # Dataset 1:
-    # il testo dell'email è già contenuto
-    # nella colonna text_combined
+    # The email text is already contained
+    # in the text_combined column
     df["text_combined"] = df["text_combined"].fillna("")
 
 
 elif DATASET == 2:
 
     # Dataset 2:
-    # unisco subject e body per creare
-    # il testo completo dell'email
+    # Combine subject and body to create
+    # the complete email text
     df["text_combined"] = (
         df["subject"].fillna("") + " " +
         df["body"].fillna("")
     )
 
-# Elimino i duplicati
+# Remove duplicates
 df = df.drop_duplicates(subset="text_combined").copy()
 
-print("Dimensioni dopo la rimozione dei duplicati:", df.shape)
+print("Dimensions after removing duplicates:", df.shape)
 
 
 # =========================
-# INPUT E LABEL
+# INPUT AND LABELS
 # =========================
 
-# X contiene le email
-# y contiene le classificazioni
+# X contains the emails
+# y contains the classifications
 x = df["text_combined"]
 y = df["label"]
 
 
 # =========================
-# DIVISIONE TRAIN / TEST
+# TRAIN / TEST SPLIT
 # =========================
 
 x_train, x_test, y_train, y_test = train_test_split(
     x,
     y,
-    # il 20% sarà usato per il test
+    # 20% of the data will be used for testing
     test_size=0.20,
 
-    # la divisione sarà sempre la stessa
+    # The split will always be the same
     random_state=42,
 
-    # mantiene la stessa proporzione delle classi
+    # Mantains the same class proportions
     stratify=y
 )
 
-print("\nTrain:")
+print("\nTraining set:")
 print(y_train.value_counts())
 
-print("\nTest:")
+print("\nTest set:")
 print(y_test.value_counts())
 
 
@@ -97,14 +97,14 @@ vectorizer = TfidfVectorizer(
     max_features=20000
 )
 
-# Il TF-IDF impara il vocabolario e l'IDF
-# esclusivamente sui dati di training
+# TF-IDF learns the vocabulary and IDF
+# exclusively from the training data
 x_train_tfidf = vectorizer.fit_transform(x_train)
 
-# Sul test viene utilizzato solamente il vocabolario già appreso
+# The test set uses only the vocabulary already learned
 x_test_tfidf = vectorizer.transform(x_test)
 
-print("\nDimensione matrice TF-IDF:")
+print("\nTF-IDF matrix dimensions:")
 print(x_train_tfidf.shape)
 
 
@@ -124,7 +124,7 @@ mlp_model, mlp_predictions = run_mlp(
 
 
 # =========================
-# VALUTAZIONE MLP
+# MLP EVALUATION
 # =========================
 
 mlp_accuracy = accuracy_score(
@@ -167,7 +167,7 @@ logistic_model, logistic_predictions = run_logistic_regression(
 
 
 # =========================
-# VALUTAZIONE LOGISTIC REGRESSION
+# LOGISTIC REGRESSION EVALUATION
 # =========================
 
 logistic_accuracy = accuracy_score(
@@ -195,25 +195,25 @@ print(
 
 
 # =========================
-# SALVATAGGIO
+# SAVING
 # =========================
 
-# Salvo il nuovo modello MLP con un nome diverso
+# Save the new MLP model with different name
 torch.save(
     mlp_model.state_dict(),
     f"models/phishing_model_mlp_{suffix}.pth"
 )
 
-# Salvo il nuovo modello Logistic Regression con un nome diverso
+# Save the new Logistic Regression model with a different name
 joblib.dump(
     logistic_model,
     f"models/phishing_model_logistic_{suffix}.pkl"
 )
 
-# Salvo il nuovo TF-IDF con un nome diverso
+# Save the new TF-IDF vectorizer with a different name
 joblib.dump(
     vectorizer,
     f"vectorizers/tfidf_vectorizer_{suffix}.pkl"
 )
 
-print("\nNuovi modelli e TF-IDF salvati correttamente.")
+print("\nNew model and TF-IDF vectorizer saved successfully.")
