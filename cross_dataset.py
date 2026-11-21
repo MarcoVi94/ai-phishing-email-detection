@@ -238,7 +238,7 @@ def main():
     # Vectorizers
     # --------------------
 
-    print("\nCaricamento vettorizzatoriLoading vectorizers
+    print("\nLoading vectorizers")
     vectorizer1 = joblib.load(
         VECTORIZER1
     )
