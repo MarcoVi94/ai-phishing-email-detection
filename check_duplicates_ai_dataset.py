@@ -17,4 +17,4 @@ else:
 
 df_without_duplicates = df.drop_duplicates(subset="text_combined")
 
-print("\nNumber of emails after removing duplicates:", len(df_without duplicates))
+print("\nNumber of emails after removing duplicates:", len(df_without_duplicates))
