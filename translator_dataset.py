@@ -7,13 +7,13 @@ OUTPUT_FILE = "datasets/ai_email_en.csv"
 
 df = pd.read_csv(INPUT_FILE)
 
-# Se esiste già un file tradotto, riprende da quello
+# If a translated file already exists, resume from it
 if os.path.exists(OUTPUT_FILE):
     df_en = pd.read_csv(OUTPUT_FILE)
 
     translated_count = df_en["text_combined"].notna().sum()
 
-    print(f"Email già tradotte: {translated_count}")
+    print(f"Already translated emails: {translated_count}")
 
 else:
     df_en = df.copy()
@@ -22,7 +22,7 @@ else:
 
 total = len(df)
 
-print(f"Totale email: {total}")
+print(f"Total emails: {total}")
 
 for i in range(translated_count, total):
 
@@ -37,20 +37,20 @@ for i in range(translated_count, total):
 
         df_en.loc[i, "text_combined"] = translated
 
-        # Salva dopo ogni email
+        # Save after each email
         df_en.to_csv(
             OUTPUT_FILE,
             index=False,
             encoding="utf-8"
         )
 
-        print(f"Tradotta email {i + 1}/{total}")
+        print(f"Translated email {i + 1}/{total}")
 
     except Exception as e:
 
-        print(f"Errore alla email {i + 1}: {e}")
-        print("Le traduzioni già completate sono state salvate.")
+        print(f"Error translating email {i + 1}: {e}")
+        print("Previously completed translations have been saved.")
         break
 
-print("\nTraduzione completata.")
-print(f"File salvato: {OUTPUT_FILE}")
+print("\nTranslation completed.")
+print(f"File saved: {OUTPUT_FILE}")
