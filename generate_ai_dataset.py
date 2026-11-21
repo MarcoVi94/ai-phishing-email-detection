@@ -16,14 +16,14 @@ OUTPUT_FILE = "datasets/ai_email.csv"
 
 
 # ==============================
-# CLIENT GEMINI
+# GEMINI CLIENT
 # ==============================
 
 client = genai.Client()
 
 
 # ==============================
-# CATEGORIE
+# CATEGORIES
 # ==============================
 
 categories_phishing = [
@@ -54,7 +54,7 @@ categories_legitimate = [
 
 
 # ==============================
-# FUNZIONE GENERAZIONE
+# EMAIL GENERATION FUNCTION
 # ==============================
 
 def generate_emails(label, categories, quantity):
@@ -62,8 +62,11 @@ def generate_emails(label, categories, quantity):
     if label == 1:
         tipo = "phishing"
     else:
-        tipo = "legittime"
+        tipo= "legittime"
 
+# The prompt is intentionally written in Italian
+# because this script generates the Italian AI-generated email dataset.
+    
     prompt = f"""
 Genera esattamente {quantity} esempi testuali sintetici per un datasets di ricerca sulla classificazione automatica delle email.
 
@@ -174,7 +177,7 @@ Restituisci direttamente il JSON.
 
 
 # ==============================
-# SALVATAGGIO DATASET
+# DATASET SAVING
 # ==============================
 
 def save_dataset(all_emails):
@@ -197,12 +200,12 @@ def save_dataset(all_emails):
     )
 
     print(
-        f"  Dataset salvato: {len(df)} email"
+        f"  Dataset saved: {len(df)} emails"
     )
 
 
 # ==============================
-# CARICAMENTO DATASET ESISTENTE
+# LOADING EXISTING DATASET
 # ==============================
 
 all_emails = []
@@ -212,7 +215,7 @@ if os.path.exists(OUTPUT_FILE):
     old_df = pd.read_csv(OUTPUT_FILE)
 
     print(
-        f"\nTrovato datasets esistente: "
+        f"\nExisting dataset found: "
         f"{len(old_df)} email."
     )
 
@@ -221,18 +224,18 @@ if os.path.exists(OUTPUT_FILE):
     ].to_dict("records")
 
     print(
-        "Phishing già presenti:",
+        "Existing Phishing emails:",
         sum(e["label"] == 1 for e in all_emails)
     )
 
     print(
-        "Legittime già presenti:",
+        "Existing Legitimate emails:",
         sum(e["label"] == 0 for e in all_emails)
     )
 
 
 # ==============================
-# GENERAZIONE PHISHING
+# PHISHING GENERATION
 # ==============================
 
 phishing_count = sum(
@@ -240,7 +243,7 @@ phishing_count = sum(
 )
 
 print("\n==============================")
-print("GENERAZIONE PHISHING")
+print("PHISHING GENERATION")
 print("==============================")
 
 while phishing_count < NUM_EMAILS_PER_CLASS:
@@ -255,7 +258,7 @@ while phishing_count < NUM_EMAILS_PER_CLASS:
     )
 
     print(
-        f"\nRichiesta phishing "
+        f"\n Phishing request"
         f"({phishing_count}/{NUM_EMAILS_PER_CLASS})"
     )
 
@@ -274,23 +277,23 @@ while phishing_count < NUM_EMAILS_PER_CLASS:
         save_dataset(all_emails)
 
         print(
-            f"  Phishing generate: "
+            f"  Phishing emails generated: "
             f"{phishing_count}/{NUM_EMAILS_PER_CLASS}"
         )
 
     except Exception as e:
 
         print(
-            "\nImpossibile completare questa richiesta."
+            "\nUnable to complete this request."
         )
 
         print(
-            "Errore:",
+            "Error:",
             e
         )
 
         print(
-            "Il programma viene interrotto."
+            "The program is being terminated."
         )
 
         break
@@ -299,7 +302,7 @@ while phishing_count < NUM_EMAILS_PER_CLASS:
 
 
 # ==============================
-# GENERAZIONE LEGITTIME
+# LEGITIMATE EMAIL GENERATION
 # ==============================
 
 legitimate_count = sum(
@@ -307,7 +310,7 @@ legitimate_count = sum(
 )
 
 print("\n==============================")
-print("GENERAZIONE EMAIL LEGITTIME")
+print("LEGITIMATE EMAIL GENERATION")
 print("==============================")
 
 while legitimate_count < NUM_EMAILS_PER_CLASS:
@@ -322,7 +325,7 @@ while legitimate_count < NUM_EMAILS_PER_CLASS:
     )
 
     print(
-        f"\nRichiesta legittime "
+        f"\nLegitimate email request "
         f"({legitimate_count}/{NUM_EMAILS_PER_CLASS})"
     )
 
@@ -341,23 +344,23 @@ while legitimate_count < NUM_EMAILS_PER_CLASS:
         save_dataset(all_emails)
 
         print(
-            f"  Legittime generate: "
+            f"  Legitimate emails generated: "
             f"{legitimate_count}/{NUM_EMAILS_PER_CLASS}"
         )
 
     except Exception as e:
 
         print(
-            "\nImpossibile completare questa richiesta."
+            "\nUnable to complete this request."
         )
 
         print(
-            "Errore:",
+            "Error:",
             e
         )
 
         print(
-            "Il programma viene interrotto."
+            "The program is being terminated."
         )
 
         break
@@ -366,27 +369,27 @@ while legitimate_count < NUM_EMAILS_PER_CLASS:
 
 
 # ==============================
-# RISULTATO FINALE
+# FINAL RESULTS
 # ==============================
 
 df = pd.DataFrame(all_emails)
 
 print("\n==============================")
-print("RISULTATO")
+print("RESULTS")
 print("==============================")
 
 print(
-    f"Totale email: {len(df)}"
+    f"Total emails: {len(df)}"
 )
 
 if len(df) > 0:
 
-    print("\nDistribuzione label:")
+    print("\nLabel distribution:")
     print(df["label"].value_counts())
 
-    print("\nDistribuzione categorie:")
+    print("\nCategory distribution:")
     print(df["category"].value_counts())
 
 print(
-    f"\nFile salvato: {OUTPUT_FILE}"
+    f"\nFile saved: {OUTPUT_FILE}"
 )
