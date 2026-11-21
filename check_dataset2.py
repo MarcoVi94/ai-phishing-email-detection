@@ -2,13 +2,13 @@ import pandas as pd
 
 df = pd.read_csv("datasets/AVN_Corpus.csv")
 
-print("Dimensioni:", df.shape)
+print("Dataset dimensions:", df.shape)
 
-print("\nColonne:")
+print("\nColumns:")
 print(df.columns.tolist())
 
-print("\nDistribuzione label:")
+print("\nLabel distribution:")
 print(df["label"].value_counts())
 
-print("\nDuplicati:")
+print("\nDuplicates:")
 print(df.duplicated(subset=["body"]).sum())
