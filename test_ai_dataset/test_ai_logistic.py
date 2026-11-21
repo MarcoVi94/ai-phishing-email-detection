@@ -17,35 +17,35 @@ def test_model(model_file, vectorizer_file, dataset_file, dataset_name):
     print(f"TEST: {dataset_name}")
     print("=" * 70)
 
-    # Caricamento dataset
+    # Dataset loading
     df = pd.read_csv(dataset_file)
 
     x = df["text_combined"].fillna("")
     y = df["label"].astype(int).values
 
-    # Caricamento TF-IDF già addestrato
+    # Load the already trained TF-IDF vectorizer
     vectorizer = joblib.load(vectorizer_file)
 
-    # Trasformazione del testo
+    # Text transformation
     x_tfidf = vectorizer.transform(x)
 
-    # Caricamento modello già addestrato
+    # Load the already trained model
     model = joblib.load(model_file)
 
-    # Predizione
+    # Prediction
     predictions = model.predict(x_tfidf)
 
-    # Metriche complessive (classe positiva = 1, phishing)
+    # Overall metrics (positive class = 1, phishing)
     accuracy = accuracy_score(y, predictions)
     precision = precision_score(y, predictions, pos_label=1, zero_division=0)
     recall = recall_score(y, predictions, pos_label=1, zero_division=0)
     f1 = f1_score(y, predictions, pos_label=1, zero_division=0)
 
-    # Matrice di confusione: [[TN, FP], [FN, TP]]
+    # Confusion matrix: [[TN, FP], [FN, TP]]
     cm = confusion_matrix(y, predictions, labels=[0, 1])
     tn, fp, fn, tp = cm.ravel()
 
-    print(f"Email testate: {len(df)}")
+    print(f"Tested emails: {len(df)}")
     print(f"Accuracy:  {accuracy * 100:.2f}%")
     print(f"Precision: {precision * 100:.2f}%")
     print(f"Recall:    {recall * 100:.2f}%")
@@ -54,26 +54,26 @@ def test_model(model_file, vectorizer_file, dataset_file, dataset_name):
     print("\nConfusion Matrix:")
     print(cm)
 
-    print("\nDettaglio matrice di confusione:")
-    print(f"TN (email legittime classificate come legittime): {tn}")
-    print(f"FP (email legittime classificate come phishing): {fp}")
-    print(f"FN (email phishing classificate come legittime): {fn}")
-    print(f"TP (email phishing classificate come phishing): {tp}")
+    print("\nConfusion matrix details:")
+    print(f"TN (legitimate emails classified as legitimate): {tn}")
+    print(f"FP (legitimate emails classified as phishing): {fp}")
+    print(f"FN (phishing emails classified as legitimate): {fn}")
+    print(f"TP (phishing emails classified as phishing): {tp}")
 
     print("\nClassification Report:")
     print(classification_report(
         y,
         predictions,
         labels=[0, 1],
-        target_names=["Legittima", "Phishing"],
+        target_names=["Legitimate", "Phishing"],
         digits=4,
         zero_division=0
     ))
 
-    # Risultati da raccogliere nel riepilogo
+    # Results to be collected in the summary
     return {
-        "Esperimento": dataset_name,
-        "Email testate": len(df),
+        "Experiment": dataset_name,
+        "Tested emails": len(df),
         "Accuracy": accuracy,
         "Precision phishing": precision,
         "Recall phishing": recall,
@@ -86,7 +86,7 @@ def test_model(model_file, vectorizer_file, dataset_file, dataset_name):
 
 
 # =========================
-# ESECUZIONE DEI TEST
+# RUNNING THE TESTS
 # =========================
 
 results = []
@@ -96,14 +96,14 @@ results.append(test_model(
     "../models/phishing_model_logistic_dataset1.pkl",
     "../vectorizers/tfidf_vectorizer_dataset1.pkl",
     "../datasets/ai_email.csv",
-    "Logistic Dataset 1 -> AI Italiano"
+    "Logistic Dataset 1 -> AI Italian"
 ))
 
 results.append(test_model(
     "../models/phishing_model_logistic_dataset1.pkl",
     "../vectorizers/tfidf_vectorizer_dataset1.pkl",
     "../datasets/ai_email_en.csv",
-    "Logistic Dataset 1 -> AI Inglese"
+    "Logistic Dataset 1 -> AI English"
 ))
 
 # Dataset 2
@@ -111,24 +111,24 @@ results.append(test_model(
     "../models/phishing_model_logistic_dataset2.pkl",
     "../vectorizers/tfidf_vectorizer_dataset2.pkl",
     "../datasets/ai_email.csv",
-    "Logistic Dataset 2 -> AI Italiano"
+    "Logistic Dataset 2 -> AI Italian"
 ))
 
 results.append(test_model(
     "../models/phishing_model_logistic_dataset2.pkl",
     "../vectorizers/tfidf_vectorizer_dataset2.pkl",
     "../datasets/ai_email_en.csv",
-    "Logistic Dataset 2 -> AI Inglese"
+    "Logistic Dataset 2 -> AI English"
 ))
 
 
 # =========================
-# RIEPILOGO FINALE
+# FINAL SUMMARY
 # =========================
 
 results_df = pd.DataFrame(results)
 
-# Stampa delle metriche in percentuale
+# Print metrics as percentages
 metric_columns = [
     "Accuracy",
     "Precision phishing",
@@ -142,14 +142,14 @@ results_display[metric_columns] = (
 ).round(2)
 
 print("\n" + "=" * 70)
-print("RIEPILOGO DEI RISULTATI (%)")
+print("RESULT SUMMARY (%)")
 print("=" * 70)
 print(results_display.to_string(index=False))
 
-# Salvataggio dei risultati numerici in formato CSV
+# Save numerical results in CSV format
 results_df.to_csv(
-    "../datasets/risultati_logistic_ai.csv",
+    "../datasets/results_logistic_ai.csv",
     index=False
 )
 
-print("\nRiepilogo salvato in: ../datasets/risultati_logistic_ai.csv")
+print("\nResults summary saved to in: ../datasets/results_logistic_ai.csv")
