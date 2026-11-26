@@ -1,6 +1,7 @@
 <p align="center">
   <img src="Machine Learning-Based Phishing Email Detection.png" width="700">
 </p>
+
 # Analysis of Machine Learning-Based Phishing Detection Systems Against AI-Generated Emails
 
 ## Project Overview
